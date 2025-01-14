@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ViewController: UIViewController {
 
@@ -28,9 +29,21 @@ class ViewController: UIViewController {
         }
         
         statusLabel.isHidden = false
+        saveHabitToFirebase(habitName: habitName)
         statusLabel.text = "You completed '\(habitName)' for today!"
         statusLabel.textColor = .systemGreen
+        
+        habitTextField.text = ""
     }
 
+    private func saveHabitToFirebase(habitName: String) {
+            let ref = Database.database().reference()
+            let habitData: [String: Any] = [
+                "habitName": habitName,
+                "isCompleted": true,
+                "date": Date().description
+            ]
+            ref.child("habits").childByAutoId().setValue(habitData)
+        }
 }
 
